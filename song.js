@@ -19,7 +19,7 @@ class Song {
      */
     get duration_time() {
         var dur = this.end_time - this.start_time
-        return (dur / 60).toString().padStart(2, "0") + ":" + (dur % 60).toString().padStart(2, "0")
+        return (dur / 60 | 0).toString().padStart(2, "0") + ":" + (dur % 60 | 0).toString().padStart(2, "0")
     }
 
     /**
