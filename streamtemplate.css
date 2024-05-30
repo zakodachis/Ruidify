@@ -1,0 +1,13 @@
+.streamtemplate {
+    padding-left: 1rem;
+    align-items: center;
+    gap: 0.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.streamtemplate > .ctn_stream_title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 3.5rem;
+}

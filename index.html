@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+<head>
+    <script src="jquery-3.7.1.min.js"></script>
+    <link rel=stylesheet type="text/css" href="streamtemplate.css">
+    <link rel=stylesheet type="text/css" href="songtemplate.css">
+    <script src="song.js"></script>
+    <script src="stream.js"></script>
+    <script src="library.js"></script>
+    <script src="player.js"></script>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <style>
+        #ytplayer {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background-color: black;
+        }
+
+        *,
+        ::before,
+        ::after {
+            border-width: 0px;
+            border-style: solid;
+            box-sizing: border-box;
+            color: white;
+            font-family: Assistant, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", Sans-Serif;
+        }
+
+        ::-webkit-scrollbar {
+            width: 0.5rem;
+        }
+
+        ::-webkit-scrollbar-track {
+            border-radius: 0.5rem;
+            background-color: rgba(255, 255, 255, 0.12);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            border-radius: 0.5rem;
+            background-color: rgba(0, 0, 0, 0.25);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            border-radius: 0.5rem;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        #bg {
+            position: fixed;
+            inset: 0;
+            background-image: linear-gradient(#dfdfdd, #26627c);
+            z-index: -1;
+        }
+
+        #root {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-template-rows: repeat(1, 1fr);
+            column-gap: 1.5rem;
+
+            margin-inline: auto;
+            margin-top: 3rem;
+            margin-bottom: 3rem;
+
+            max-width: 90rem;
+            height: 40rem;
+        }
+
+        #root>div {
+            display: flex;
+            align-items: flex-start;
+            flex-direction: column;
+            height: inherit;
+        }
+
+        #ctn_player {
+            background-color: rgb(42 159 162 / 21%);
+        }
+
+        #playinfo>.title {
+            margin: 0.5rem 0;
+        }
+
+        #progressbar {
+            position: relative;
+        }
+
+        #progressbar>div {
+            position: absolute;
+        }
+
+        #volume {
+            display: flex;
+            flex-direction: row-reverse;
+            gap: 0.5rem;
+        }
+
+        #volume >* {
+            color: rgba(255, 255, 255, 0.75);
+        }
+
+        #ctn_playlist {
+            background-color: rgb(251 203 41 / 21%);
+        }
+
+        #ctn_playlist>.title,
+        #ctn_library>.title {
+            padding: 1rem 0.5rem 0.5rem 1rem;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: xx-large;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+
+        .ctn_list {
+            overflow-y: scroll;
+            height: inherit;
+            width: 100%;
+        }
+
+        .time_label {
+            color: rgba(255, 255, 255, 0.75);
+            font-size: medium;
+        }
+
+        #ctn_library {
+            background-color: rgb(48 85 185 / 14%);
+        }
+
+
+        button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            margin: 0;
+            height: 2.5rem;
+            aspect-ratio: 1;
+            border-width: 0.1rem;
+            border-radius: 0.5rem;
+            border-color: rgba(255, 255, 255, 0.6);
+            background-color: transparent;
+        }
+
+        button:hover {
+            background-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .ctn_button {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        #playinfo>.button {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            margin-top: 1rem;
+            margin-left: 2rem;
+            margin-right: 2rem;
+        }
+
+        #playinfo>.button>button {
+            aspect-ratio: 1;
+            background-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .nowarp {
+            text-wrap: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+<html>
+
+<body onload="load()">
+    <div id="bg"></div>
+    <div id="root">
+        <div id="ctn_player">
+            <div id="ytplayer">
+            </div>
+            <div id="playinfo" style="width: 100%; padding: 1rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="color: rgba(255, 255, 255, 0.6); font-size: xx-large;">現正播放</div>
+                    <div id="volume">
+                        <div id="volume_value" style="width: 1rem; text-align: center;">50</div>
+                        <input id="volume_slider" type="range" style="width: 6rem" min="0" max="100" />
+                        <div id="volume_icon">音量</div>
+                    </div>
+                </div>
+                <div class="title"></div>
+                <div id="progressbar">
+                    <input id="progressbar_slider" type="range" style="width: 100%;" />
+                    <div id="progressbar_start" class="time_label" style="left:0%;">0:00</div>
+                    <div id="progressbar_end" class="time_label" style="left:100%; margin-left: -1.75rem;">1:00</div>
+                </div>
+                <div class="button">
+                    <button id="Repeat" onclick="Player.getInstance().toggle_repeat()">重複關閉</button>
+                    <button id="Prev" onclick="Player.getInstance().play_prev_song()">上首</button>
+                    <button id="pauseplay" onclick="Player.getInstance().toggle_play()">暫停</button>
+                    <button id="next" onclick="Player.getInstance().play_next_song()">下首</button>
+                    <button id="visit" onclick="Player.getInstance().open_stream_url()">You Tube</button>
+                </div>
+            </div>
+            <div id="lyrics"></div>
+        </div>
+        <div id="ctn_playlist">
+            <div class="title">
+                播放清單
+                <div style="flex:1 1 0%"></div>
+                <button onclick="Player.getInstance().shuffle_playlist()">隨機</button>
+                <button onclick="Player.getInstance().clear_playlist()">清除全部</button>
+            </div>
+            <div class="ctn_list"></div>
+        </div>
+        <div id="ctn_library">
+            <div class="title">
+                歌曲庫
+                <input type="text" style="flex:1 1 0%; height: 2rem; border-radius: 0.5rem; display: none;"
+                    placeholder=" 找歌曲?"></input>
+                <button style="display: none;">1</button>
+                <button style="display: none;">2</button>
+            </div>
+            <div class="ctn_list"></div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,17 @@
+.songtemplate {
+    padding-left: 1rem;
+    align-items: center;
+    height: 3.5rem;
+    display: flex;
+    gap: 0.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.songtemplate > div > a {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 1rem;
+}
+
+.songtemplate.isplaying {
+    background-color: rgba(255, 255, 255, 0.2);
+}
