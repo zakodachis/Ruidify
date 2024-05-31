@@ -21,11 +21,26 @@ class Player {
         document.getElementById("progressbar_slider").addEventListener("change", this.timeline_change.bind(this))
         document.getElementById("progressbar_slider").addEventListener("input", this.timeline_input.bind(this))
         document.getElementById("volume_slider").addEventListener("input", this.set_volume.bind(this))
-        
     }
 
     onYouTubeIframeAPIReady() {
-        this.ytplayer = new YT.Player('ytplayer', { width: "480", height: "270" });
+        this.ytplayer = new YT.Player('ytplayer', {
+            width: "480",
+            height: "270",
+            videoId: "5uM9Vu3T8jg",
+            playerVars: {
+                autoplay: 0,
+                controls: 1,
+                disablekb: 1,
+                fs: 0,
+                rel: 0,
+                playsinline: 1
+            },
+            events: {
+                /*'onReady': this.onReady.bind(this),*/
+                'onStateChange': this.onPlayerStateChange.bind(this)
+            }
+        });
     }
 
     /**
@@ -66,51 +81,34 @@ class Player {
         this.isReady = 0;
         this.current_song = song;
         this.current_song_element = element;
-        this.ytplayer.destroy();
-        this.ytplayer = new YT.Player('ytplayer', {
-            width: "480",
-            height: "270",
-            videoId: "5uM9Vu3T8jg",
-            playerVars: {
-                autoplay: 1,
-                controls: 0,
-                disablekb: 1,
-                fs: 0,
-                rel: 0,
-                playsinline: 1
-            },
-            events: {
-                'onReady': this.onReady.bind(this),
-                'onStateChange': this.onPlayerStateChange.bind(this)
-            }
-        });
+
+        this.ytplayer.loadVideoById(song.stream_url.match(/youtu(?:.*\/v\/|.*v\=|\.be\/)([A-Za-z0-9_\-]{11})/)[1])
+
         this.ui_refresh_playinfo();
         this.ui_refresh_playlist();
     }
 
-    onReady() {
-        if (this.ytplayer.getPlayerState() != 1) {
-            if (!this.ytplayer.isMuted()) this.ytplayer.mute()
-            setTimeout(this.onReady.bind(this), 100)
-        }
-        else {
-            this.ytplayer.seekTo(this.current_song.start_time)
-            this.ytplayer.unMute()
-            document.getElementById("volume_slider").value = this.ytplayer.getVolume()
-            document.getElementById("volume_value").innerText = this.ytplayer.getVolume() | 0
-            this.isReady = 1
-        }
-    }
-
     onPlayerStateChange() {
-        if (this.ytplayer.getPlayerState() == YT.PlayerState.PLAYING) {
-            document.getElementById("pauseplay").innerHTML = "暫停"
-            if (this.isReady) {
-                this.trigger_playing()
+        if (this.isReady) {
+            if (this.ytplayer.getPlayerState() == YT.PlayerState.PLAYING) {
+                document.getElementById("pauseplay").innerHTML = "暫停"
+                if (this.isReady) this.trigger_playing()
+            }
+            else {
+                document.getElementById("pauseplay").innerHTML = "播放"
             }
         }
         else {
-            document.getElementById("pauseplay").innerHTML = "播放"
+            if (this.ytplayer.getPlayerState() == YT.PlayerState.PLAYING) {
+                this.ytplayer.seekTo(this.current_song.start_time)
+                this.ytplayer.unMute()
+                document.getElementById("volume_slider").value = this.ytplayer.getVolume()
+                document.getElementById("volume_value").innerText = this.ytplayer.getVolume() | 0
+                this.isReady = 1
+            }
+            else {
+                if (!this.ytplayer.isMuted()) this.ytplayer.mute()
+            }
         }
     }
 
@@ -198,7 +196,7 @@ class Player {
         }
     }
 
-    set_volume(){
+    set_volume() {
         this.ytplayer.setVolume(document.getElementById("volume_slider").value);
         document.getElementById("volume_value").innerText = document.getElementById("volume_slider").value | 0;
     }
@@ -233,9 +231,6 @@ class Player {
         document.getElementById("progressbar_start").innerHTML = (t / 60 >> 0).toString().padStart(2, "0") + ":" + (t % 60 >> 0).toString().padStart(2, "0")
         document.getElementById("progressbar_slider").value = t / (this.current_song.end_time - this.current_song.start_time) * 100
     }
-
-
-
 }
 
 var tag = document.createElement('script');
