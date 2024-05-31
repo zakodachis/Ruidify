@@ -14,7 +14,7 @@ function set_ctn_library(stream_element) {
 }
 
 function load() {
-    var json_url = "https://script.googleusercontent.com/macros/echo?user_content_key=9bNsqJLnOhey8-CARukPxeQQK6xnQ4rc2XdwSRFhN4WfIKVOPa8MCUyxwo2JxPVSwWnHDX9QLJCkRa8Qd0aF_k603NOyAOtbm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnIfyEo-5iq3MinW8At8E3PHnmgWORXCogGt02YGVoqJQlWeyRyB74HE8qwc8zgEChu09xm9DM23lUE3gEPvACMHJ_BMbj4xJd9z9Jw9Md8uu&lib=MRZoVmBZOgCzHDvRzFM1OMwWa-E8PuSjQ";
+    var json_url = "https://script.google.com/macros/s/AKfycbwPZA9z-A68ODfDnebxZ_-aY7ykEd2qKv6bsO9E9u-dlXAOt_gObbQz0gLTxUUxfg-N8g/exec";
 
     $.getJSON(json_url, (json) => {
         var streams = json.map(function (json_stream) {

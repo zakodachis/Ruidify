@@ -28,7 +28,7 @@ class Stream {
                 <div class="ctn_button">
                 </div>
             </div>
-            <div class="ctn_stream_songlist">
+            <div class="ctn_stream_songlist" style="display:none;">
             </div>
         </div>
         `
@@ -48,6 +48,7 @@ class Stream {
         var btn_toggle = document.createElement('button');
         ctn_btn.append(btn_toggle);
         btn_toggle.innerText = "▼";
+        btn_toggle.style.rotate = '90deg';
         btn_toggle.addEventListener("click", function (){
             ctn_stream_songlist.style.display = ctn_stream_songlist.style.display == '' ? 'none' : '';
             btn_toggle.style.rotate = ctn_stream_songlist.style.display == '' ? '' : '90deg';
