@@ -11,3 +11,7 @@
     gap: 0.5rem;
     height: 3.5rem;
 }
+
+.streamtemplate > .ctn_stream_songlist {
+    background-color: rgba(48, 85, 185, 0.1)
+}
