@@ -5,6 +5,10 @@
     border-top: 1px solid rgba(255, 255, 255, 0.4);
 }
 
+.streamtemplate.collapse > .ctn_stream_title > .ctn_button > .toggle_collapse{
+    rotate: 90deg;
+}
+
 .streamtemplate > .ctn_stream_title {
     display: flex;
     align-items: center;
@@ -14,4 +18,24 @@
 
 .streamtemplate > .ctn_stream_songlist {
     background-color: rgba(48, 85, 185, 0.1)
+}
+
+#ctn_library > .ctn_list.quering > .streamtemplate{
+    border: none;
+}
+
+#ctn_library > .ctn_list.quering > .streamtemplate > .ctn_stream_title{
+    display: none;
+}
+
+.streamtemplate.collapse > .ctn_stream_songlist > .songtemplate{
+    display: none;
+}
+
+#ctn_library > .ctn_list.quering > .streamtemplate > .ctn_stream_songlist > .songtemplate{
+    display: none;
+}
+
+#ctn_library > .ctn_list.quering > .streamtemplate > .ctn_stream_songlist > .songtemplate.match{
+    display: flex;
 }

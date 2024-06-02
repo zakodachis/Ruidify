@@ -31,7 +31,7 @@ class Song {
         element.innerHTML = `
         <div class="songtemplate">
             <div class="nowarp">
-                <div class="nowarp">${this.song_title}</div>
+                <div class="nowarp song_title">${this.song_title}</div>
                 <a class="nowarp">${this.stream_title}</a>
             </div>
             <div style="flex:1 1 0%"></div>
