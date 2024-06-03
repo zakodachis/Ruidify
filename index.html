@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <head>
-    <link rel="shortcut icon" href="favicon.ico"/>
+    <link rel="shortcut icon" href="favicon.ico" />
     <script src="jquery-3.7.1.min.js"></script>
     <link rel=stylesheet type="text/css" href="streamtemplate.css">
     <link rel=stylesheet type="text/css" href="songtemplate.css">
@@ -9,6 +9,47 @@
     <script src="stream.js"></script>
     <script src="library.js"></script>
     <script src="player.js"></script>
+    <script>
+        var json_url = "https://script.google.com/macros/s/AKfycbwPZA9z-A68ODfDnebxZ_-aY7ykEd2qKv6bsO9E9u-dlXAOt_gObbQz0gLTxUUxfg-N8g/exec";
+
+        $.getJSON(json_url)
+            .then((json) => {
+                var streams = json.map(function (json_stream) {
+                    var songs = json_stream.songs.map(function (json_song) {
+                        return new Song(json_song.start_time, json_song.end_time, json_stream.stream_title, json_stream.stream_url, json_song.song_title)
+                    })
+                    return new Stream(json_stream.stream_title, json_stream.stream_url, json_stream.stream_date, songs)
+                })
+                var ctn_library_list = document.getElementById("ctn_library").getElementsByClassName("ctn_list")[0]
+                ctn_library_list.innerHTML = ""
+                streams.forEach(stream => ctn_library_list.append(stream.to_element()))
+                return streams
+            })
+            .then((streams) => {
+                const queryString = window.location.search;
+                const urlParams = new URLSearchParams(queryString);
+                const playlist = urlParams.get('playlist')
+                var result = playlist.match(/^random([0-9]*)$/)
+                if (result) {
+                    var nums_of_song = parseInt(result[1])
+                    var songlist = streams.flatMap(stream => stream.songs)
+                    for (var i = parseInt(result[1]); i > 0 && songlist.length > 0; i--) {
+                        var index = (Math.random() * songlist.length | 0)
+                        Player.getInstance().add_to_playlist([songlist[index]])
+                        songlist[index] = songlist[songlist.length-1]
+                        songlist.pop()
+                    }
+                    return
+                }
+                result = playlist.match(/^([A-Za-z0-9_\-]{11})$/)
+                if (result) {
+                    Player.getInstance().add_to_playlist(streams.find((stream) => stream.stream_id == result[1]).songs)
+                    return
+                }
+            })
+
+
+    </script>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <style>
         #ytplayer {
@@ -96,7 +137,7 @@
             gap: 0.5rem;
         }
 
-        #volume >* {
+        #volume>* {
             color: rgba(255, 255, 255, 0.75);
         }
 
@@ -142,12 +183,12 @@
             aspect-ratio: 1;
             border-width: 0.1rem;
             border-radius: 0.5rem;
-            border-color: rgba(255, 255, 255, 0.6);
-            background-color: transparent;
+            border-color: rgba(255, 255, 255, 0.5);
+            background-color: rgba(0,0,0,0.1);
         }
 
         button:hover {
-            background-color: rgba(255, 255, 255, 0.12);
+            background-color: rgba(0, 0, 0, 0.2);
         }
 
         .ctn_button {
@@ -213,7 +254,8 @@
             <div class="title">
                 播放清單
                 <div style="flex:1 1 0%"></div>
-                <button onclick="Player.getInstance().shuffle_playlist()">隨機</button>
+                <button onclick="{var p = new URLSearchParams(window.location.search); p.set('playlist', 'random10'); window.location.search = p}">隨機10曲</button>
+                <button onclick="Player.getInstance().shuffle_playlist()">隨機排序</button>
                 <button onclick="Player.getInstance().clear_playlist()">清除全部</button>
             </div>
             <div class="ctn_list"></div>

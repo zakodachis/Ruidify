@@ -23,6 +23,14 @@ class Song {
     }
 
     /**
+     * 
+     * @returns {string}
+     */
+    get stream_id(){
+        return this.stream_url.match(/youtu(?:.*\/v\/|.*v\=|\.be\/)([A-Za-z0-9_\-]{11})/)[1]
+    }
+
+    /**
      * @param {string} template_type
      * @returns {Element}
      */

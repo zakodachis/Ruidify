@@ -15,6 +15,14 @@ class Stream {
 
     /**
      * 
+     * @returns {string}
+     */
+    get stream_id() {
+        return this.url.match(/youtu(?:.*\/v\/|.*v\=|\.be\/)([A-Za-z0-9_\-]{11})/)[1]
+    }
+
+    /**
+     * 
      * @returns {Element}
      */
     to_element() {

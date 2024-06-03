@@ -37,7 +37,6 @@ class Player {
                 playsinline: 1
             },
             events: {
-                /*'onReady': this.onReady.bind(this),*/
                 'onStateChange': this.onPlayerStateChange.bind(this)
             }
         });
@@ -82,7 +81,7 @@ class Player {
         this.current_song = song;
         this.current_song_element = element;
 
-        this.ytplayer.loadVideoById(song.stream_url.match(/youtu(?:.*\/v\/|.*v\=|\.be\/)([A-Za-z0-9_\-]{11})/)[1])
+        this.ytplayer.loadVideoById(song.stream_id)
 
         this.ui_refresh_playinfo();
         this.ui_refresh_playlist();
