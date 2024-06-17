@@ -10,8 +10,11 @@
     <script src="library.js"></script>
     <script src="player.js"></script>
     <script>
-        var json_url = "https://script.google.com/macros/s/AKfycbwPZA9z-A68ODfDnebxZ_-aY7ykEd2qKv6bsO9E9u-dlXAOt_gObbQz0gLTxUUxfg-N8g/exec";
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
 
+        var json_url = "https://script.google.com/macros/s/AKfycbwPZA9z-A68ODfDnebxZ_-aY7ykEd2qKv6bsO9E9u-dlXAOt_gObbQz0gLTxUUxfg-N8g/exec";
+        if (urlParams.get('staging') == 1) { json_url += "?staging=1" }
         $.getJSON(json_url)
             .then((json) => {
                 var streams = json.map(function (json_stream) {
@@ -26,8 +29,6 @@
                 return streams
             })
             .then((streams) => {
-                const queryString = window.location.search;
-                const urlParams = new URLSearchParams(queryString);
                 const playlist = urlParams.get('playlist')
                 var result = playlist.match(/^random([0-9]*)$/)
                 if (result) {
@@ -36,7 +37,7 @@
                     for (var i = parseInt(result[1]); i > 0 && songlist.length > 0; i--) {
                         var index = (Math.random() * songlist.length | 0)
                         Player.getInstance().add_to_playlist([songlist[index]])
-                        songlist[index] = songlist[songlist.length-1]
+                        songlist[index] = songlist[songlist.length - 1]
                         songlist.pop()
                     }
                     return
@@ -184,7 +185,7 @@
             border-width: 0.1rem;
             border-radius: 0.5rem;
             border-color: rgba(255, 255, 255, 0.5);
-            background-color: rgba(0,0,0,0.1);
+            background-color: rgba(0, 0, 0, 0.1);
         }
 
         button:hover {
@@ -254,7 +255,8 @@
             <div class="title">
                 播放清單
                 <div style="flex:1 1 0%"></div>
-                <button onclick="{var p = new URLSearchParams(window.location.search); p.set('playlist', 'random10'); window.location.search = p}">隨機10曲</button>
+                <button
+                    onclick="{var p = new URLSearchParams(window.location.search); p.set('playlist', 'random10'); window.location.search = p}">隨機10曲</button>
                 <button onclick="Player.getInstance().shuffle_playlist()">隨機排序</button>
                 <button onclick="Player.getInstance().clear_playlist()">清除全部</button>
             </div>
