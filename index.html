@@ -14,6 +14,7 @@
         const urlParams = new URLSearchParams(queryString);
 
         var json_url = "https://script.google.com/macros/s/AKfycbwPZA9z-A68ODfDnebxZ_-aY7ykEd2qKv6bsO9E9u-dlXAOt_gObbQz0gLTxUUxfg-N8g/exec";
+        if (urlParams.get('cooperate') == 1) { json_url = "https://script.google.com/macros/s/AKfycbyLsal5NLrLyQCC7SDRms44U-uukEflzEW-C0tNPQ_uQt8Y3npHPY3jZ51mrcJTVqJX/exec" }
         if (urlParams.get('staging') == 1) { json_url += "?staging=1" }
         $.getJSON(json_url)
             .then((json) => {
