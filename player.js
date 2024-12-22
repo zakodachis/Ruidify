@@ -37,7 +37,8 @@ class Player {
                 playsinline: 1
             },
             events: {
-                'onStateChange': this.onPlayerStateChange.bind(this)
+                'onStateChange': this.onPlayerStateChange.bind(this),
+                'onError': this.onError.bind(this)
             }
         });
     }
@@ -118,6 +119,11 @@ class Player {
             this.ui_update_progressbar()
             setTimeout(this.trigger_playing.bind(this), 100);
         }
+    }
+
+    onError(event){
+        console.log(event.data)
+        this.play_next_song()
     }
 
 
