@@ -89,8 +89,8 @@ export default {
             try {
                 if (youtube.getPlayerState() == playing) {
                     this.progress = youtube.getCurrentTime()
-                    if (this.progress > this.video_end) this.on_ended()
-                    setTimeout(this.trigger_playing, 100);
+                    if (this.progress > this.video_end + 1) this.on_ended()
+                    else setTimeout(this.trigger_playing, 100)
                 }
             }
             catch (error) {
