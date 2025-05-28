@@ -58,6 +58,15 @@ export default {
 </script>
 
 <style scoped>
+#ctn_search {
+    display: flex;
+    flex-direction: column;
+    height: inherit;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+
 .title {
     padding: 1rem;
     gap: 1rem;
@@ -80,6 +89,7 @@ input {
     height: 2rem;
     border-radius: 0.5rem;
     color: black;
+    font-size: 16px;
 }
 
 .v-enter-active,
